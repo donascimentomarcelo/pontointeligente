@@ -1,0 +1,7 @@
+spring:
+  data:
+    mongodb:
+      database: curso-kotlin
+
+paginacao:
+  qtdPorPagina: 20

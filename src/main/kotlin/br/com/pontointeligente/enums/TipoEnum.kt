@@ -6,5 +6,5 @@ enum class TipoEnum {
     INICIO_ALMOCO,
     TERMINO_ALMOCO,
     INICIO_PAUSA,
-    TERMINO_PAUSA
+    TERMINO_PAUSA;
 }
