@@ -1,6 +1,6 @@
 package br.com.pontointeligente.services
 
-import br.com.pontointeligente.documents.Empresa
+import br.com.pontointeligente.entities.Empresa
 
 interface EmpresaService {
 

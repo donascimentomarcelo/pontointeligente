@@ -1,6 +1,6 @@
 package br.com.pontointeligente.services.impl
 
-import br.com.pontointeligente.documents.Empresa
+import br.com.pontointeligente.entities.Empresa
 import br.com.pontointeligente.repositories.EmpresaRepository
 import br.com.pontointeligente.services.EmpresaService
 import org.springframework.stereotype.Service

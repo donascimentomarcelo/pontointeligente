@@ -1,6 +1,6 @@
 package br.com.pontointeligente.controllers
 
-import br.com.pontointeligente.documents.Lancamento
+import br.com.pontointeligente.entities.Lancamento
 import br.com.pontointeligente.dtos.LancamentoDto
 import br.com.pontointeligente.services.FuncionarioService
 import br.com.pontointeligente.services.LancamentoService

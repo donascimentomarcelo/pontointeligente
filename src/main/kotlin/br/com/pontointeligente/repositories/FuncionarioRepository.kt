@@ -1,11 +1,11 @@
 package br.com.pontointeligente.repositories
 
-import br.com.pontointeligente.documents.Funcionario
-import org.springframework.data.mongodb.repository.MongoRepository
+import br.com.pontointeligente.entities.Funcionario
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface FuncionarioRepository : MongoRepository<Funcionario, String> {
+interface FuncionarioRepository : JpaRepository<Funcionario, String> {
 
     fun findByEmail(email: String): Funcionario?
 

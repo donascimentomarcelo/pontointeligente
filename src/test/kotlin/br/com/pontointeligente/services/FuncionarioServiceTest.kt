@@ -1,9 +1,8 @@
 package br.com.pontointeligente.services
 
-import br.com.pontointeligente.documents.Funcionario
+import br.com.pontointeligente.entities.Funcionario
 import br.com.pontointeligente.enums.PerfilEnum
 import br.com.pontointeligente.repositories.FuncionarioRepository
-import br.com.pontointeligente.utils.SenhaUtils
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -25,7 +24,7 @@ class FuncionarioServiceTest {
 
     private val email: String = "email@email.com"
     private val cpf: String = "123456789"
-    private val id: String = "1"
+    private val id: Long = 1L
 
     @BeforeEach
     @Throws(Exception::class)
@@ -33,7 +32,7 @@ class FuncionarioServiceTest {
         BDDMockito.given(funcionarioRepository?.save(Mockito.any(Funcionario::class.java)))
                 .willReturn(funcionario())
 
-        BDDMockito.given(funcionarioRepository?.findById(id))
+        BDDMockito.given(funcionarioRepository?.findById(id.toString()))
                 .willReturn(Optional.of(funcionario()))
 
         BDDMockito.given(funcionarioRepository?.findByEmail(email))
@@ -57,7 +56,7 @@ class FuncionarioServiceTest {
 
     @Test
     fun testBuscarFuncionarioPorId() {
-        val funcionario: Funcionario? = this.funcionarioService?.buscarPorId(id)
+        val funcionario: Funcionario? = this.funcionarioService?.buscarPorId(id.toString())
         Assertions.assertNotNull(funcionario)
     }
 
@@ -69,11 +68,12 @@ class FuncionarioServiceTest {
 
     @Test
     private fun funcionario(): Funcionario = Funcionario(
+            id,
             "Nome",
             email,
-            SenhaUtils().gerarBcrypt("123456"),
+            "123456",
             cpf,
             PerfilEnum.ROLE_USUARIO,
-            id
+            null!!,
     )
 }

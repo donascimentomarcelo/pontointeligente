@@ -1,6 +1,6 @@
 package br.com.pontointeligente.services
 
-import br.com.pontointeligente.documents.Funcionario
+import br.com.pontointeligente.entities.Funcionario
 
 interface FuncionarioService {
 

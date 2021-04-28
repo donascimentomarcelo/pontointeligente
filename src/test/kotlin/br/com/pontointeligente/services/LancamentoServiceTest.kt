@@ -1,6 +1,6 @@
 package br.com.pontointeligente.services
 
-import br.com.pontointeligente.documents.Lancamento
+import br.com.pontointeligente.entities.Lancamento
 import br.com.pontointeligente.enums.TipoEnum
 import br.com.pontointeligente.repositories.LancamentoRepository
 import org.junit.jupiter.api.Assertions
@@ -26,15 +26,15 @@ class LancamentoServiceTest {
     @Autowired
     private val lancamentoService: LancamentoService? = null
 
-    private val id: String = "1"
+    private val id: Long = 1L
 
     @BeforeEach
     @Throws(Exception::class)
     fun setUp() {
-        BDDMockito.given<Page<Lancamento>>(lancamentoRepository?.findByFuncionarioId(id, PageRequest.of(0, 10)))
+        BDDMockito.given<Page<Lancamento>>(lancamentoRepository?.findByFuncionarioId(id.toString(), PageRequest.of(0, 10)))
                 .willReturn(PageImpl(ArrayList<Lancamento>()))
 
-        BDDMockito.given(lancamentoRepository?.findById(id))
+        BDDMockito.given(lancamentoRepository?.findById(id.toString()))
                 .willReturn(Optional.of(lancamento()))
 
         BDDMockito.given(lancamentoRepository?.save(Mockito.any(Lancamento::class.java)))
@@ -43,7 +43,7 @@ class LancamentoServiceTest {
 
     @Test
     fun testBuscarPorId() {
-        val lancamento: Lancamento? = lancamentoService?.buscarPorId(id)
+        val lancamento: Lancamento? = lancamentoService?.buscarPorId(id.toString())
         Assertions.assertNotNull(lancamento)
     }
 
@@ -55,9 +55,9 @@ class LancamentoServiceTest {
 
     @Test
     fun testBuscarLancamentoPorFuncionarioId() {
-        val lancamento: Page<Lancamento>? = lancamentoService?.buscarPorFuncionarioId(id, PageRequest.of(0, 10))
+        val lancamento: Page<Lancamento>? = lancamentoService?.buscarPorFuncionarioId(id.toString(), PageRequest.of(0, 10))
         Assertions.assertNotNull(lancamento)
     }
 
-    private fun lancamento(): Lancamento = Lancamento(Date(), TipoEnum.INICIO_TRABALHO, id)
+    private fun lancamento(): Lancamento = Lancamento(id, Date(), TipoEnum.INICIO_TRABALHO, null!!)
 }

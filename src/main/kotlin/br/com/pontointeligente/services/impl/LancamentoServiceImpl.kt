@@ -1,6 +1,6 @@
 package br.com.pontointeligente.services.impl
 
-import br.com.pontointeligente.documents.Lancamento
+import br.com.pontointeligente.entities.Lancamento
 import br.com.pontointeligente.repositories.LancamentoRepository
 import br.com.pontointeligente.services.LancamentoService
 import org.springframework.data.domain.Page

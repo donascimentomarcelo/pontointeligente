@@ -1,6 +1,6 @@
 package br.com.pontointeligente.services
 
-import br.com.pontointeligente.documents.Empresa
+import br.com.pontointeligente.entities.Empresa
 import br.com.pontointeligente.repositories.EmpresaRepository
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -40,5 +40,5 @@ class EmpresaServiceTest {
         Assertions.assertNotNull(empresa)
     }
 
-    private fun empresa(): Empresa = Empresa("Razao Social", CNPJ, "1")
+    private fun empresa(): Empresa = Empresa(1L, "Razao Social", CNPJ)
 }

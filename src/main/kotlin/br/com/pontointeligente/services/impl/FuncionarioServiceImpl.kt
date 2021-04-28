@@ -1,6 +1,6 @@
 package br.com.pontointeligente.services.impl
 
-import br.com.pontointeligente.documents.Funcionario
+import br.com.pontointeligente.entities.Funcionario
 import br.com.pontointeligente.repositories.FuncionarioRepository
 import br.com.pontointeligente.services.FuncionarioService
 import org.springframework.stereotype.Service
