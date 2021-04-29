@@ -29,7 +29,7 @@ class LancamentoController(
     }
 
     @GetMapping("/{id}")
-    fun listarPorId(@PathVariable("id") id: String): ResponseEntity<Lancamento> {
+    fun listarPorId(@PathVariable("id") id: Long): ResponseEntity<Lancamento> {
 
         val lancamento: Lancamento? = lancamentoService.buscarPorId(id)
         return ResponseEntity.ok(lancamento)
