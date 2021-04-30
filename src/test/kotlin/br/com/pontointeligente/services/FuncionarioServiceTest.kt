@@ -8,13 +8,25 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
 import org.mockito.Mockito
+import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import java.io.IOException
 import java.util.*
 
 @SpringBootTest
 class FuncionarioServiceTest {
+
+    companion object {
+        private val ID: Long = 1L
+        private val EMAIL: String = "EMAIL@EMAIL.com"
+        private val CPF: String = "123456789"
+        private val SENHA: String = "123456789"
+        private val NOME: String = "crane"
+        private val PERFIL: PerfilEnum = PerfilEnum.ROLE_USUARIO
+        private val EMPRESAID: String = "1"
+    }
 
     @MockBean
     private val funcionarioRepository: FuncionarioRepository? = null
@@ -22,58 +34,60 @@ class FuncionarioServiceTest {
     @Autowired
     private val funcionarioService: FuncionarioService? = null
 
-    private val email: String = "email@email.com"
-    private val cpf: String = "123456789"
-    private val id: Long = 1L
+    private var funcionario: Funcionario? = null
 
     @BeforeEach
     @Throws(Exception::class)
     fun setUp() {
-        BDDMockito.given(funcionarioRepository?.save(Mockito.any(Funcionario::class.java)))
-                .willReturn(funcionario())
+        this.funcionario = Funcionario(ID, NOME, EMAIL, SENHA, CPF, PERFIL, EMPRESAID)
 
-        BDDMockito.given(funcionarioRepository?.findById(id.toString()))
-                .willReturn(Optional.of(funcionario()))
+        `when`(funcionarioRepository?.save(Mockito.any(Funcionario::class.java)))
+                .thenReturn(this.funcionario)
 
-        BDDMockito.given(funcionarioRepository?.findByEmail(email))
-                .willReturn(funcionario())
+        `when`(funcionarioRepository?.findById(ID.toString()))
+                .thenReturn(Optional.of(this.funcionario!!))
 
-        BDDMockito.given(funcionarioRepository?.findByCpf(cpf))
-                .willReturn(funcionario())
+        `when`(funcionarioRepository?.findByEmail(EMAIL))
+                .thenReturn(this.funcionario)
+
+        `when`(funcionarioRepository?.findByCpf(CPF))
+                .thenReturn(this.funcionario)
     }
 
     @Test
     fun testSalvarFuncionario() {
-        val funcionario: Funcionario? = this.funcionarioService?.salvar(funcionario())
+        `when`(funcionarioRepository?.findByCpf(CPF))
+                .thenReturn(null)
+
+        val funcionario: Funcionario? = this.funcionarioService?.salvar(this.funcionario!!)
+
         Assertions.assertNotNull(funcionario)
+
+        verify(funcionarioRepository, times(1))
+                ?.save(this.funcionario!!)
+
+        verify(funcionarioRepository, times(1))
+                ?.findByCpf(CPF)
+
+        verify(funcionarioRepository, never())
+                ?.delete(this.funcionario!!)
     }
 
     @Test
     fun testBuscarFuncionarioPorCpf() {
-        val funcionario: Funcionario? = this.funcionarioService?.buscarPorCpf(cpf)
+        val funcionario: Funcionario? = this.funcionarioService?.buscarPorCpf(CPF)
         Assertions.assertNotNull(funcionario)
     }
 
     @Test
     fun testBuscarFuncionarioPorId() {
-        val funcionario: Funcionario? = this.funcionarioService?.buscarPorId(id.toString())
+        val funcionario: Funcionario? = this.funcionarioService?.buscarPorId(ID.toString())
         Assertions.assertNotNull(funcionario)
     }
 
     @Test
     fun testBuscarFuncionarioPorEmail() {
-        val funcionario: Funcionario? = this.funcionarioService?.buscarPorEmail(email)
+        val funcionario: Funcionario? = this.funcionarioService?.buscarPorEmail(EMAIL)
         Assertions.assertNotNull(funcionario)
     }
-
-    @Test
-    private fun funcionario(): Funcionario = Funcionario(
-            id,
-            "Nome",
-            email,
-            "123456",
-            cpf,
-            PerfilEnum.ROLE_USUARIO,
-            null!!,
-    )
 }
