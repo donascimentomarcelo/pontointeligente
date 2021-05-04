@@ -7,22 +7,33 @@ import org.springframework.stereotype.Service
 import java.io.IOException
 
 @Service
-class FuncionarioServiceImpl(val funcionarioRepository: FuncionarioRepository) : FuncionarioService {
+class FuncionarioServiceImpl(val funcionarioRepository: FuncionarioRepository?) : FuncionarioService {
 
-    override fun salvar(funcionario: Funcionario): Funcionario {
-        val retorno = buscarPorCpf(funcionario.cpf)
-
-        if (retorno != null) {
-            throw IOException("cpf alredy exists")
-        }
-
-        return funcionarioRepository.save(funcionario)
+    companion object {
+        private val CPF_ALREADY_EXISTS: String = "cpf already exists"
+        private val USER_NOT_FOUND: String = "user not found"
     }
 
-    override fun buscarPorCpf(cpf: String): Funcionario? = funcionarioRepository.findByCpf(cpf)
+    override fun salvar(funcionario: Funcionario): Funcionario? {
+        if(buscarPorCpf(funcionario.cpf) != null) {
+            throw IOException(CPF_ALREADY_EXISTS)
+        }
+        return funcionarioRepository?.save(funcionario)
+    }
 
-    override fun buscarPorEmail(email: String): Funcionario? = funcionarioRepository.findByEmail(email)
+    override fun buscarPorCpf(cpf: String): Funcionario? {
+        return funcionarioRepository?.findByCpf(cpf)
+    }
 
-    override fun buscarPorId(id: String): Funcionario? = funcionarioRepository.findById(id).get()
+    override fun buscarPorEmail(email: String): Funcionario? =
+            funcionarioRepository?.findByEmail(email)
+
+    override fun buscarPorId(id: String): Funcionario? =
+            funcionarioRepository?.findById(id)
+                    ?.orElseThrow({ IOException(USER_NOT_FOUND) })
+
+    override fun remover(id: Long) {
+        funcionarioRepository?.deleteById(id.toString())
+    }
 
 }

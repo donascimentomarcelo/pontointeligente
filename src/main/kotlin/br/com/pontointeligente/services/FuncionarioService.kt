@@ -4,7 +4,7 @@ import br.com.pontointeligente.entities.Funcionario
 
 interface FuncionarioService {
 
-    fun salvar(funcionario: Funcionario): Funcionario
+    fun salvar(funcionario: Funcionario): Funcionario?
 
     fun buscarPorCpf(cpf: String): Funcionario?
 
@@ -12,4 +12,5 @@ interface FuncionarioService {
 
     fun buscarPorId(id: String): Funcionario?
 
+    fun remover(id: Long)
 }

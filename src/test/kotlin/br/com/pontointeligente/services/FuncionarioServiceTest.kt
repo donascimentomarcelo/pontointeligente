@@ -3,15 +3,17 @@ package br.com.pontointeligente.services
 import br.com.pontointeligente.entities.Funcionario
 import br.com.pontointeligente.enums.PerfilEnum
 import br.com.pontointeligente.repositories.FuncionarioRepository
+import br.com.pontointeligente.services.impl.FuncionarioServiceImpl
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.BDDMockito
+import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import java.io.IOException
 import java.util.*
 
@@ -26,68 +28,121 @@ class FuncionarioServiceTest {
         private val NOME: String = "crane"
         private val PERFIL: PerfilEnum = PerfilEnum.ROLE_USUARIO
         private val EMPRESAID: String = "1"
+        private val CPF_ALREADY_EXISTS: String = "cpf already exists"
     }
 
-    @MockBean
-    private val funcionarioRepository: FuncionarioRepository? = null
+    @Mock
+    private val funcionarioRepositoryMock: FuncionarioRepository? = null
 
     @Autowired
-    private val funcionarioService: FuncionarioService? = null
+    private var funcionarioService: FuncionarioService? = null
 
     private var funcionario: Funcionario? = null
 
     @BeforeEach
-    @Throws(Exception::class)
     fun setUp() {
+        funcionarioService = FuncionarioServiceImpl(funcionarioRepositoryMock)
+
         this.funcionario = Funcionario(ID, NOME, EMAIL, SENHA, CPF, PERFIL, EMPRESAID)
 
-        `when`(funcionarioRepository?.save(Mockito.any(Funcionario::class.java)))
+        `when`(funcionarioRepositoryMock?.save(Mockito.any(Funcionario::class.java)))
                 .thenReturn(this.funcionario)
 
-        `when`(funcionarioRepository?.findById(ID.toString()))
+        `when`(funcionarioRepositoryMock?.findById(ID.toString()))
                 .thenReturn(Optional.of(this.funcionario!!))
 
-        `when`(funcionarioRepository?.findByEmail(EMAIL))
+        `when`(funcionarioRepositoryMock?.findByEmail(EMAIL))
                 .thenReturn(this.funcionario)
 
-        `when`(funcionarioRepository?.findByCpf(CPF))
+        `when`(funcionarioRepositoryMock?.findByCpf(CPF))
                 .thenReturn(this.funcionario)
     }
 
     @Test
-    fun testSalvarFuncionario() {
-        `when`(funcionarioRepository?.findByCpf(CPF))
+    fun `it should create a user with successfully`() {
+        `when`(funcionarioRepositoryMock?.findByCpf(CPF))
                 .thenReturn(null)
 
         val funcionario: Funcionario? = this.funcionarioService?.salvar(this.funcionario!!)
 
         Assertions.assertNotNull(funcionario)
 
-        verify(funcionarioRepository, times(1))
+        verify(funcionarioRepositoryMock, times(1))
                 ?.save(this.funcionario!!)
 
-        verify(funcionarioRepository, times(1))
+        verify(funcionarioRepositoryMock, times(1))
                 ?.findByCpf(CPF)
 
-        verify(funcionarioRepository, never())
-                ?.delete(this.funcionario!!)
+        verify(funcionarioRepositoryMock, never())
+                ?.deleteById(ID.toString())
     }
 
     @Test
-    fun testBuscarFuncionarioPorCpf() {
+    fun `it should throws IOException for cpf duplicated`() {
+
+        val ex = assertThrows(IOException::class.java,
+                {this.funcionarioService?.salvar(this.funcionario!!)}
+        )
+
+        assertEquals(CPF_ALREADY_EXISTS, ex.message)
+
+        verify(funcionarioRepositoryMock, times(1))
+                ?.findByCpf(CPF)
+
+        verify(funcionarioRepositoryMock, never())
+                ?.deleteById(ID.toString())
+    }
+
+    @Test
+    fun `it should find employee by cpf`() {
         val funcionario: Funcionario? = this.funcionarioService?.buscarPorCpf(CPF)
         Assertions.assertNotNull(funcionario)
+
+        verify(funcionarioRepositoryMock, times(1))
+                ?.findByCpf(CPF)
+
+        verify(funcionarioRepositoryMock, never())
+                ?.save(this.funcionario!!)
+
+        verify(funcionarioRepositoryMock, never())
+                ?.deleteById(ID.toString())
     }
 
     @Test
-    fun testBuscarFuncionarioPorId() {
+    fun `it should find employee by Id`() {
         val funcionario: Funcionario? = this.funcionarioService?.buscarPorId(ID.toString())
         Assertions.assertNotNull(funcionario)
+
+        verify(funcionarioRepositoryMock, times(1))
+                ?.findById(ID.toString())
+
+        verify(funcionarioRepositoryMock, never())
+                ?.save(this.funcionario!!)
+
+        verify(funcionarioRepositoryMock, never())
+                ?.deleteById(ID.toString())
     }
 
     @Test
-    fun testBuscarFuncionarioPorEmail() {
+    fun `it should find employee by Email`() {
         val funcionario: Funcionario? = this.funcionarioService?.buscarPorEmail(EMAIL)
         Assertions.assertNotNull(funcionario)
+
+        verify(funcionarioRepositoryMock, times(1))
+                ?.findByEmail(EMAIL)
+
+        verify(funcionarioRepositoryMock, never())
+                ?.save(this.funcionario!!)
+
+        verify(funcionarioRepositoryMock, never())
+                ?.deleteById(ID.toString())
+    }
+
+    @Test
+    fun `it should delete employee`() {
+        this.funcionarioService?.remover(ID)
+
+        verify(funcionarioRepositoryMock, times(1))
+                ?.deleteById(ID.toString())
     }
 }
