@@ -4,6 +4,7 @@ import br.com.pontointeligente.entities.Funcionario
 import br.com.pontointeligente.enums.PerfilEnum
 import br.com.pontointeligente.repositories.FuncionarioRepository
 import br.com.pontointeligente.services.impl.FuncionarioServiceImpl
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -45,22 +46,22 @@ class FuncionarioServiceTest {
 
         this.funcionario = Funcionario(ID, NOME, EMAIL, SENHA, CPF, PERFIL, EMPRESAID)
 
-        `when`(funcionarioRepositoryMock?.save(Mockito.any(Funcionario::class.java)))
+        whenever(funcionarioRepositoryMock?.save(Mockito.any(Funcionario::class.java)))
                 .thenReturn(this.funcionario)
 
-        `when`(funcionarioRepositoryMock?.findById(ID.toString()))
+        whenever(funcionarioRepositoryMock?.findById(ID.toString()))
                 .thenReturn(Optional.of(this.funcionario!!))
 
-        `when`(funcionarioRepositoryMock?.findByEmail(EMAIL))
+        whenever(funcionarioRepositoryMock?.findByEmail(EMAIL))
                 .thenReturn(this.funcionario)
 
-        `when`(funcionarioRepositoryMock?.findByCpf(CPF))
+        whenever(funcionarioRepositoryMock?.findByCpf(CPF))
                 .thenReturn(this.funcionario)
     }
 
     @Test
     fun `it should create a user with successfully`() {
-        `when`(funcionarioRepositoryMock?.findByCpf(CPF))
+        whenever(funcionarioRepositoryMock?.findByCpf(CPF))
                 .thenReturn(null)
 
         val funcionario: Funcionario? = this.funcionarioService?.salvar(this.funcionario!!)

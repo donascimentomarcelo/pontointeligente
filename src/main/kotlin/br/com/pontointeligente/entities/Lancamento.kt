@@ -14,7 +14,7 @@ data class Lancamento(
         val id: Long? = 0,
         val data: Date,
         val tipo: TipoEnum?,
-        val funcionarioId: String?,
+        val funcionarioId: Long?,
         val descricao: String = "",
         val localizacao: String = ""
 )

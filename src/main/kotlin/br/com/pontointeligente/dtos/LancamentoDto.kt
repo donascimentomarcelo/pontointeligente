@@ -11,7 +11,7 @@ data class LancamentoDto (
     val tipo: String? = "",
     val descricao: String = "",
     val localizacao: String = "",
-    val funcionarioId: String = "",
+    val funcionarioId: Long? = 0,
 ) {
     fun fromEntity(): Lancamento =
         Lancamento(

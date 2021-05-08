@@ -5,6 +5,7 @@ import br.com.pontointeligente.repositories.LancamentoRepository
 import br.com.pontointeligente.services.LancamentoService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.io.IOException
 
@@ -14,8 +15,7 @@ class LancamentoServiceImpl(val lancamentoRepository: LancamentoRepository): Lan
             lancamentoRepository.findByFuncionarioId(funcionarioId, pageRequest)
 
     override fun buscarPorId(id: Long): Lancamento? {
-        return lancamentoRepository.findById(id)
-                .orElseThrow({IOException("not found")})
+        return lancamentoRepository.findByIdOrNull(id)
     }
 
     override fun salvar(lancamento: Lancamento): Lancamento {

@@ -3,10 +3,9 @@ package br.com.pontointeligente.services
 import br.com.pontointeligente.entities.Lancamento
 import br.com.pontointeligente.enums.TipoEnum
 import br.com.pontointeligente.repositories.LancamentoRepository
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.mockito.BDDMockito
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import org.junit.jupiter.api.*
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -14,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
+import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -26,25 +26,40 @@ class LancamentoServiceTest {
     @Autowired
     private val lancamentoService: LancamentoService? = null
 
-    private val id: Long = 1L
+    companion object {
+        private val ID: Long = 1L
+        private val FUNCIONARIO_ID: Long = 1L
+        private val DESCRICAO: String = "123456789"
+        private val LOCALIZACAO: String = "RJ"
+        private val TIPO: TipoEnum = TipoEnum.INICIO_TRABALHO
+        private val DATA: Date = Date()
+        private val PAGE: Int = 0
+        private val SIZE: Int = 10
+    }
 
     @BeforeEach
-    @Throws(Exception::class)
     fun setUp() {
-        BDDMockito.given<Page<Lancamento>>(lancamentoRepository?.findByFuncionarioId(id.toString(), PageRequest.of(0, 10)))
-                .willReturn(PageImpl(ArrayList<Lancamento>()))
+        whenever(lancamentoRepository?.findByFuncionarioId(ID.toString(), PageRequest.of(PAGE, SIZE)))
+                .thenReturn(PageImpl(ArrayList<Lancamento>()))
 
-        BDDMockito.given(lancamentoRepository?.findById(id.toString()))
-                .willReturn(Optional.of(lancamento()))
+        whenever(lancamentoRepository?.findById(ID))
+                .thenReturn(Optional.of(lancamento()))
 
-        BDDMockito.given(lancamentoRepository?.save(Mockito.any(Lancamento::class.java)))
-                .willReturn(lancamento())
+        whenever(lancamentoRepository?.save(Mockito.any(Lancamento::class.java)))
+                .thenReturn(lancamento())
     }
 
     @Test
     fun testBuscarPorId() {
-        val lancamento: Lancamento? = lancamentoService?.buscarPorId(id.toString())
-        Assertions.assertNotNull(lancamento)
+        val lanc = assertDoesNotThrow {
+            lancamentoRepository
+                    ?.findById(ID)
+        }
+
+        Assertions.assertEquals(lanc?.get()?.id, ID)
+
+        verify(lancamentoRepository)
+                ?.findById(ID)
     }
 
     @Test
@@ -55,9 +70,9 @@ class LancamentoServiceTest {
 
     @Test
     fun testBuscarLancamentoPorFuncionarioId() {
-        val lancamento: Page<Lancamento>? = lancamentoService?.buscarPorFuncionarioId(id.toString(), PageRequest.of(0, 10))
+        val lancamento: Page<Lancamento>? = lancamentoService?.buscarPorFuncionarioId(ID.toString(), PageRequest.of(PAGE, SIZE))
         Assertions.assertNotNull(lancamento)
     }
 
-    private fun lancamento(): Lancamento = Lancamento(id, Date(), TipoEnum.INICIO_TRABALHO, null!!)
+    private fun lancamento(): Lancamento = Lancamento(ID, DATA, TIPO, FUNCIONARIO_ID, DESCRICAO, LOCALIZACAO)
 }

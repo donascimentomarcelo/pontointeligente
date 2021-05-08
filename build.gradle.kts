@@ -25,9 +25,9 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation( "org.springframework.boot:spring-boot-starter-validation:2.4.5" )
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 	runtimeOnly("com.h2database:h2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.mockito:mockito-core:2.+")
 }
 
 tasks.withType<KotlinCompile> {
