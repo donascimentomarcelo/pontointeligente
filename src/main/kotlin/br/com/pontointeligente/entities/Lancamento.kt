@@ -1,11 +1,9 @@
 package br.com.pontointeligente.entities
 
 import br.com.pontointeligente.enums.TipoEnum
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 data class Lancamento(
@@ -14,7 +12,10 @@ data class Lancamento(
         val id: Long? = 0,
         val data: Date,
         val tipo: TipoEnum?,
-        val funcionarioId: Long?,
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "funcionario_id")
+        @JsonIgnore
+        val funcionario: Funcionario?,
         val descricao: String = "",
         val localizacao: String = ""
 )

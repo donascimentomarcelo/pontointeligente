@@ -44,7 +44,7 @@ class FuncionarioServiceTest {
     fun setUp() {
         funcionarioService = FuncionarioServiceImpl(funcionarioRepositoryMock)
 
-        this.funcionario = Funcionario(ID, NOME, EMAIL, SENHA, CPF, PERFIL, EMPRESAID)
+        this.funcionario = Funcionario(ID, NOME, EMAIL, SENHA, CPF, PERFIL, null)
 
         whenever(funcionarioRepositoryMock?.save(Mockito.any(Funcionario::class.java)))
                 .thenReturn(this.funcionario)

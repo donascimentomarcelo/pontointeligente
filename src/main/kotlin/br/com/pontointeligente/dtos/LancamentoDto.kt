@@ -18,7 +18,7 @@ data class LancamentoDto (
                 id,
                 data!!,
                 TipoEnum.valueOf(tipo!!),
-                funcionarioId,
+                null,
                 localizacao,
                 descricao
         )

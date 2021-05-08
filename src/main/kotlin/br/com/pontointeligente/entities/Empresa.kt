@@ -1,9 +1,6 @@
 package br.com.pontointeligente.entities
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 data class Empresa (
@@ -11,5 +8,8 @@ data class Empresa (
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long? = 0,
         val razaoSocial: String,
-        val cnpj: String
-)
+        val cnpj: String,
+) {
+        @OneToMany(mappedBy = "empresa", cascade = [CascadeType.ALL])
+        val funcionario: List<Funcionario>? = mutableListOf()
+}

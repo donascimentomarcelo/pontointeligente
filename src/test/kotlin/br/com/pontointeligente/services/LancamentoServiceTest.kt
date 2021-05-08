@@ -13,7 +13,6 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
-import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -74,5 +73,5 @@ class LancamentoServiceTest {
         Assertions.assertNotNull(lancamento)
     }
 
-    private fun lancamento(): Lancamento = Lancamento(ID, DATA, TIPO, FUNCIONARIO_ID, DESCRICAO, LOCALIZACAO)
+    private fun lancamento(): Lancamento = Lancamento(ID, DATA, TIPO, null, DESCRICAO, LOCALIZACAO)
 }
